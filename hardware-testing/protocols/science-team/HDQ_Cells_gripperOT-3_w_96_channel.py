@@ -142,15 +142,18 @@ def bead_mix(pipette, volume, well, reps=5, mm_from_bottom=0):
 # Start protocol
 def run(ctx):
     # Same for all HDQ Extractions
-    wash_vol = 600
+    wash_vol = 600  # ***ASPIRATED***
     num_washes = 3
     settling_time = 4
 
     # Differences between sample types
-    AL_vol = 250
-    sample_vol = 180
-    binding_buffer_vol = 340
-    elution_vol = 50
+    # NOTE: also aspirates 1000 uL
+    #       ALL_ASPIRATES = [50, 250, 340, 430, 1000]
+    AL_vol = 250  # ***ASPIRATED***
+    sample_start_vol = 180
+    binding_buffer_vol = 340  # ***ASPIRATED***
+    elution_vol = 50  # ***ASPIRATED***
+    starting_vol = AL_vol + sample_start_vol  # ***ASPIRATED***
 
     # PIPETTE and TIPS
     pip = ctx.load_instrument('p1000_96', mount="left")
@@ -179,7 +182,6 @@ def run(ctx):
     pip.pick_up_tip(tips_a)
     pip.aspirate(AL_vol, lysis_res)
     pip.dispense(AL_vol, sample_plate)
-    starting_vol = AL_vol + sample_vol
     resuspend_pellet(pip, starting_vol * 0.9, sample_plate, reps=4, mm_from_bottom=1)
     pip.drop_tip(tips_a)
 
@@ -238,7 +240,7 @@ def run(ctx):
     for i in range(num_washes):
         pip.aspirate(wash_vol, wash_res)
         pip.dispense(wash_vol, sample_plate)
-        resuspend_pellet(pip, wash1_vol * 0.9, sample_plate, reps=3, mm_from_bottom=1)
+        resuspend_pellet(pip, wash_vol * 0.9, sample_plate, reps=3, mm_from_bottom=1)
 
         pip.home()
 
