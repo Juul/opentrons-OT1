@@ -324,7 +324,7 @@ class ProtocolContextImplementation(
 
     def comment(self, msg: str) -> None:
         """Add comment to run log."""
-        pass
+        pass  # Message is sent via broker and mapped via LegacyCommandMapper.
 
     def delay(self, seconds: float, msg: Optional[str]) -> None:
         """Delay execution for x seconds."""
