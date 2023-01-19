@@ -112,8 +112,8 @@ async def _main(directory: Path, is_simulating: bool, skip: SkipUpdateTarget) ->
                     path=fw.path, target=fw.target, is_simulating=is_simulating
                 )
     # flash single/multi channel pipettes
-    _pip_fw_and_target = {FW_PIP_SINGLE: singles, FW_PIP_MULTI: multis}
-    for fw, mnt_list in _pip_fw_and_target.items():
+    _pip_fw_and_target = [(FW_PIP_SINGLE, singles,), (FW_PIP_MULTI, multis,)]
+    for fw, mnt_list in _pip_fw_and_target:
         if not fw.path:
             continue
         for mount in mnt_list:
