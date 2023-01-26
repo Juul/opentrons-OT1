@@ -280,7 +280,8 @@ async def _aspirate_and_look_for_droplets(
 ) -> bool:
     pip = api.hardware_pipettes[mount.to_mount()]
     assert pip
-    pipette_volume = pip.working_volume
+    pipette_volume = int(input("type volume to aspirate, the press ENTER: "))
+    assert pipette_volume <= pip.working_volume, f"volume {pipette_volume} bigger than max volume {pip.working_volume}"
     print(f"aspirating {pipette_volume} microliters")
     await api.aspirate(mount, pipette_volume)
     await api.move_rel(mount, Point(z=LEAK_HOVER_ABOVE_LIQUID_MM))
