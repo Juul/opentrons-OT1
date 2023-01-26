@@ -1,4 +1,7 @@
-import { IDENTITY_VECTOR } from '@opentrons/shared-data'
+import {
+  IDENTITY_VECTOR,
+  getLoadedLabwareDefinitionsByUri,
+} from '@opentrons/shared-data'
 import { useCreateLabwareOffsetMutation } from '@opentrons/react-api-client'
 import { useProtocolDetailsForRun } from '../../Devices/hooks'
 import { getLabwareDefinitionUri } from '../../Devices/ProtocolRun/utils/getLabwareDefinitionUri'
@@ -9,9 +12,11 @@ export function useClearAllOffsetsForCurrentRun(): () => void {
   const currentRunId = useCurrentRunId()
   const { protocolData } = useProtocolDetailsForRun(currentRunId)
   const { createLabwareOffset } = useCreateLabwareOffsetMutation()
-
   return () => {
     if (currentRunId == null || protocolData == null) return
+    const labwareDefinitions = getLoadedLabwareDefinitionsByUri(
+      protocolData.commands
+    )
     protocolData.labware.forEach(item => {
       const location = getLabwareOffsetLocation(
         item.id,
@@ -25,7 +30,7 @@ export function useClearAllOffsetsForCurrentRun(): () => void {
             definitionUri: getLabwareDefinitionUri(
               item.id,
               protocolData.labware,
-              protocolData.labwareDefinitions
+              labwareDefinitions
             ),
             location: location,
             vector: IDENTITY_VECTOR,

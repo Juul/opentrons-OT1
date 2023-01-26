@@ -1,5 +1,9 @@
 import isEqual from 'lodash/isEqual'
-import { getLabwareDefURI, getLabwareDisplayName } from '@opentrons/shared-data'
+import {
+  getLabwareDefURI,
+  getLabwareDisplayName,
+  getLoadedLabwareDefinitionsByUri,
+} from '@opentrons/shared-data'
 import { useProtocolDetailsForRun } from '../../Devices/hooks'
 import { getLabwareOffsetLocation } from '../../Devices/ProtocolRun/utils/getLabwareOffsetLocation'
 import { useCurrentRunId } from '../../ProtocolUpload/hooks'
@@ -15,6 +19,10 @@ export interface OffsetCandidate extends LabwareOffset {
 export function useOffsetCandidatesForCurrentRun(): OffsetCandidate[] {
   const currentRunId = useCurrentRunId()
   const { protocolData } = useProtocolDetailsForRun(currentRunId)
+  const labwareDefinitionsByUri =
+    protocolData != null
+      ? getLoadedLabwareDefinitionsByUri(protocolData?.commands)
+      : {}
   const historicRunDetails = useHistoricRunDetails()
   const allHistoricOffsets = historicRunDetails
     .map(
@@ -50,7 +58,7 @@ export function useOffsetCandidatesForCurrentRun(): OffsetCandidate[] {
       const definition = getLabwareDefinition(
         item.id,
         protocolData.labware,
-        protocolData.labwareDefinitions
+        labwareDefinitionsByUri
       )
       const defUri = getLabwareDefURI(definition)
       const labwareDisplayName = getLabwareDisplayName(definition)
