@@ -526,7 +526,7 @@ class OT3Controller:
         serial = attached.serial
         return {
             "config": gripper_config.load(model),
-            "id": f"GRPV{attached.model}{serial}",
+            "id": f"GRPV{attached.model.replace('.', '')}{serial}",
         }
 
     @staticmethod
