@@ -29,6 +29,7 @@ import {
 } from '../../organisms/Devices/hooks'
 import { getLabwareSetupItemGroups } from '../../organisms/Devices/ProtocolRun/SetupLabware/utils'
 import { useMostRecentCompletedAnalysis } from '../../organisms/LabwarePositionCheck/useMostRecentCompletedAnalysis'
+import { ProtocolSetupModules } from '../../organisms/ProtocolSetupModules'
 import { ConfirmCancelModal } from '../../organisms/RunDetails/ConfirmCancelModal'
 import {
   useRunControls,
@@ -137,12 +138,16 @@ function PlayButton({ disabled, onPlay }: PlayButtonProps): JSX.Element {
 }
 
 interface PrepareToRunProps {
+  runId: string
   setSetupScreen: React.Dispatch<React.SetStateAction<SetupScreens>>
 }
 
-function PrepareToRun({ setSetupScreen }: PrepareToRunProps): JSX.Element {
+function PrepareToRun({
+  runId,
+  setSetupScreen,
+}: PrepareToRunProps): JSX.Element {
   const { t } = useTranslation('protocol_setup')
-  const { runId } = useParams<OnDeviceRouteParams>()
+  // const { runId } = useParams<OnDeviceRouteParams>()
   const history = useHistory()
 
   const { data: runRecord } = useRunQuery(runId, { staleTime: Infinity })
@@ -193,6 +198,7 @@ function PrepareToRun({ setSetupScreen }: PrepareToRunProps): JSX.Element {
     protocolData?.modules != null && protocolData?.modules.length > 0
   // get missing/unmatched modules and derive status
   const attachedModules = useAttachedModules()
+  console.log('attachedModules', attachedModules)
   /**
    * TODO(bh, 2023-01-24): for convenience, reusing hooks written for desktop app
    * useUnmatchedModulesForProtocol is indirect for the local robot case and calls other hooks that aren't relevant here
@@ -330,7 +336,7 @@ function PrepareToRun({ setSetupScreen }: PrepareToRunProps): JSX.Element {
   )
 }
 
-type SetupScreens =
+export type SetupScreens =
   | 'prepare to run'
   | 'instruments'
   | 'modules'
@@ -339,13 +345,17 @@ type SetupScreens =
   | 'liquids'
 
 export function ProtocolSetup(): JSX.Element {
+  const { runId } = useParams<OnDeviceRouteParams>()
+
   // orchestrate setup subpages/components
   const [setupScreen, setSetupScreen] = React.useState<SetupScreens>(
     'prepare to run'
   )
 
   const setupComponentByScreen = {
-    'prepare to run': <PrepareToRun setSetupScreen={setSetupScreen} />,
+    'prepare to run': (
+      <PrepareToRun runId={runId} setSetupScreen={setSetupScreen} />
+    ),
     // TODO: insert setup screen components below:
     instruments: (
       <>
@@ -354,10 +364,7 @@ export function ProtocolSetup(): JSX.Element {
       </>
     ),
     modules: (
-      <>
-        <BackButton onClick={() => setSetupScreen('prepare to run')} />
-        Modules
-      </>
+      <ProtocolSetupModules runId={runId} setSetupScreen={setSetupScreen} />
     ),
     labware: (
       <>

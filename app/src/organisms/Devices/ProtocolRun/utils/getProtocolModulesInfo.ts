@@ -67,6 +67,7 @@ export const getProtocolModulesInfo = (
         if (slotName === SPAN7_8_10_11_SLOT) {
           slotName = '7'
         }
+        console.log('slotName', slotName)
         const slotPosition =
           deckDef.locations.orderedSlots.find(slot => slot.id === slotName)
             ?.position ?? []
