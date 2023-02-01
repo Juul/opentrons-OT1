@@ -10,7 +10,7 @@ The original `README.md` is included as `README.md.orig`. The official 2.5.2 rel
 
 # Building
 
-As of this writing (Jan 31st 2023) these build instructions work on Xubuntu 20.04 but who knows if all of the necessary dependencies will continue to be available in the future. For this reason, I have checked in all of `api/python_virtualenv` and all of `app/node_modules` except `app/node_modules/electron/dist/electron` which was too large for github to accept. That file is included in the `binaries.tar.gz` in Releases.
+As of this writing (Jan 31st 2023) these build instructions work on Xubuntu 20.04 but who knows if all of the necessary dependencies will continue to be available in the future. For this reason, I have checked in all of `api/python_virtualenv` and all of `app/node_modules` except `app/node_modules/electron/dist/electron` which was too large for github to accept. That file is included in the `binaries.tar.gz` in Releases. You might have too copy that file manually into this repo before building.
 
 The binaries for the relevant versions of python, pip, nvm and node are included as part of a Release as the `tools.tar.gz` file and there I have also included everything that landed in my `~/.cache/` directory as the `cache.tar.gz`.
 
