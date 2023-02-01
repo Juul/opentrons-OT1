@@ -1,0 +1,26 @@
+pylama
+pytest
+pytest-cov
+
+numpydoc==0.6.0
+# June 15 2017 (artyom) : https://github.com/pyinstaller/pyinstaller/issues/2434
+#git+https://github.com/pyinstaller/pyinstaller.git@7e814646474efc868206beb8fb9dfe45af527109
+pyinstaller==5.7.0
+Sphinx==1.4.8
+twine==1.9.1
+dill==0.2.5
+Flask==0.10.1
+Flask-Cors==3.0.2
+Flask-Script==2.0.5
+Flask-SocketIO==2.5
+requests==2.9.1
+psutil==4.3.1
+greenlet==0.4.17
+gevent==20.9.0
+wheel==0.29.0
+markupsafe==2.0.1
+jinja2==2.9.2
+itsdangerous==0.21
+werkzeug==0.14.1
+python-socketio==1.4.4
+python-engineio==1.7.0

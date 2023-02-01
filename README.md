@@ -1,136 +1,108 @@
-# Opentrons Platform
+This is a fork of the official OpenTrons git repo focused on making the last version of the OpenTrons app with support for the OT1 buildable and usable on modern systems.
 
-* [Overview](#overview)
-* [Opentrons API](#api)
-* [OT-App](#app)
-* [Contributing/Building](#contributing)
+If you just want the binary, which has been tested only on Xubuntu 20.04, then go to the Releases page and get `opentrons-ot1-app.tar.gz`, extract it and run `./ot-app`. You can also try the 
 
-<a name="overview"></a>
-## Overview
+Note that this is all based on the very last commit related to the 2.5.x OpenTrons app, which as far is the last software to support the OpenTrons OT-1.
 
-Opentrons makes robots for biologists. 
+The last official release of the OT-1 app and python module were version 2.5.2 but there is no tagged release for 2.5.2 in the official OpenTrons git repo. The closest is 2.5.0 which is from August 15 2017. The files in the official 2.5.2 `.deb` file are from August 18 2017. The 2.5.0 tag was on the branch called `ot1-stable` and commits continued on this branch until Jan 24 2018. I have made this branch the default branch on this repo and the instructions and released binaries are all from this last commit so they should be more recent than the 2.5.2 release.
 
-Our mission is to provide the scientific community with a common platform to easily share protocols and reproduce each other's work. Our robots automate experiments that would otherwise be done by hand, allowing our users to spend more time pursuing answers to the 21st century’s most important questions, and less time pipetting.
+The original `README.md` is included as `README.md.orig`. The official 2.5.2 release would likely work on Ubuntu 17.10 or 17.04 based on the release dates, but building the original codebase using the original instructions would still fail due to insufficiently constrained dependencies. This has been fixed here and it should now build on modern systems.
 
-This repository contains the source code for the Opentrons API and OT App. We'd love for you to to explore, hack, and build upon them! 
+# Building
 
-<a name="api"></a>
-## Opentrons API
+As of this writing (Jan 31st 2023) these build instructions work on Xubuntu 20.04 but who knows if all of the necessary dependencies will continue to be available in the future. For this reason, I have checked in all of `api/python_virtualenv` and all of `app/node_modules` except `app/node_modules/electron/dist/electron` which was too large for github to accept. That file is included in the `binaries.tar.gz` in Releases.
 
-The Opentrons API is a simple framework designed to make writing automated biology lab protocols easy.
+The binaries for the relevant versions of python, pip, nvm and node are included as part of a Release as the `tools.tar.gz` file and there I have also included everything that landed in my `~/.cache/` directory as the `cache.tar.gz`.
 
-We've designed it in a way we hope is accessible to anyone with basic computer and wetlab skills. As a bench scientist, you should be able to code your automated protocols in a way that reads like a lab notebook.
+If downloads of e.g. electron related stuff fails then you might want to extract the contents of `cache.tar.gz` in your `~/.cache/` directory before following these instructions (make sure it doesn't land in `/.cache/cache/`).
 
-```(python)
-pipette.aspirate(tube_1).dispense(tube_2)
+
+The following instructions were tested using Python 3.8.10, pip version 20.17.1 and python virtualenv version 20.17.1.
+
+The `api/dist/opentrons-api-server` binary is included in this git repo. If you want to re-build it, first do:
+
+```
+rm -rf api/dist/*
 ```
 
-That is how you tell the Opentrons robot to pipette its max volume from one tube to another. Learn more here:
+If you don't want to rebuild this part, skip to the "Building the app" section.
 
-* [Documentation](http://docs.opentrons.com)
-* [Source code](https://github.com/OpenTrons/opentrons/tree/develop/api)
+## Building the API server
 
-<a name="app"></a>
-## OT App
+Enter the api dir:
 
-Easily upload a protocol, calibrate positions, and run your experiment from your computer.
-
-* [Documentation](https://support.opentrons.com/)
-* [Source code](https://github.com/OpenTrons/opentrons/tree/develop/app)
-
-![ot-app](https://lh3.googleusercontent.com/hz80NB3yiMB6r50aKg9DgSuqmwNAEKFz7aC3qQS56YregCGygg1oc3ldn9FAanqTt7REUXikkSuHDX69JODaLWgegDwO_JnDf30j3NuZ05mWOq16nMTxQBAFW6cZqqEsLaDU-uRW)
-
-<a name="contributing"></a>
-## Contributing
-
-We love contributors! Here is the best way to work with us:
-
-1. Filing a [bug report](https://github.com/OpenTrons/opentrons/issues). We will fix these as quickly as we can, and appreciate your help uncovering bugs in our code. 
-
-2. Submit a pull request with any new features you've added to a branch of the API or App. We will reach out to talk with you about integration testing and launcing it into our product!
-
-### Using BETA versions
-
-If you want to build the platform and play with the latest development version we are working on before it is launched, here are the steps:
-
-### Set up your development environment
-
-* Python 3.5.3 ([pyenv](https://github.com/pyenv/pyenv) is optional, but recommended)
-* Node 6.11.0 ([nvm](https://github.com/creationix/nvm) is optional, but recommended)
-* OS X 10.11+, Linux, Windows 10 with Cygwin
-* GNU Make: both API and OT-App are using [Makefiles](https://en.wikipedia.org/wiki/Makefile)
-
-### Start the Opentrons API
-
-Clone the repository to get started.
-```shell
-git clone https://github.com/OpenTrons/opentrons.git
 ```
-Install the dependencies and API itself.
+cd api/
+```
 
-```shell
-cd api
+If you don't want to re-download all of the python dependencies (they have been checked into this git repo) then you can skip this step:
+
+```
+rm -rf python_virtualenv
+virtualenv python_virtualenv
 make install
-# Verify
-python -c 'import opentrons; print(opentrons.__version__)'
-2.4.2
 ```
 
-(Optional) test, lint and build API server executable (needed for the app)
-```shell
-make test
+Compile the API server:
+
+```
 make exe
 ```
 
-### OT-App
+You can test if it starts without errors by running:
 
-Our app is built with [Electron](https://github.com/electron/electron). The structure and configuration of bundling, testing and packaging are based on [this great repo](https://github.com/chentsulin/electron-react-boilerplate).
+```
+./dist/opentrons-api-server
+```
 
-You can read great coverage of some tools that are used in our stack [here](https://github.com/grab/front-end-guide). Note, our front-end framework of choice is [Vue.js](https://vuejs.org/) which dictates our choice of test tools: [Karma](https://github.com/karma-runner/karma), [Mocha](https://github.com/mochajs/mocha), [Chai](https://github.com/chaijs/chai) and [Istanbul](https://github.com/gotwarlost/istanbul)
+## Building the app
 
-#### Build
+Now to build the electron app move to the `app/` dir:
 
-Install OT-App dependencies.
+```
+cd ../app
+```
 
-```shell
-cd app
+First install the recommended node version using nvm (node version manager):
+
+```
+nvm install 7.10.1
+```
+
+or if it's already installed then:
+
+```
+nvm use 7.10.1
+```
+
+then:
+
+```
 make install
 ```
 
-Build and package the app
+You will then need a different node version to build the electron app:
 
-```shell
+```
+nvm install 10.19.0
+```
+
+or if it's already installed then:
+
+```
+nvm use 10.19.0
+```
+
+Then:
+
+```
 make build package
-# Optionally test
-make test
-# For end-to-end click-through test
-make test-e2e
 ```
 
-## Develop
+Finally, to run the app:
 
-If you want to play with the code base and make some changes, feel free to do so.
-
-Start Python API Server (in a separate terminal):
-
-```shell
-cd api
-export ENABLE_VIRTUAL_SMOOTHIE=true; python opentrons/server/main.py
+```
+cd dist/linux-unpacked
+./ot-app
 ```
 
-Install dev tools:
-
-```shell
-cd app
-# Install development tools that are not part of package.json
-npm i electron-debug
-npm i vue-devtools
-```
-
-Run OT-App in development mode. This will open development tools and connect to the API Server already running (instead of starting it from `app/bin/opentrons-api-server`):
-
-```shell
-make dev
-```
-
-Enjoy!
