@@ -17,7 +17,7 @@ The binaries for the relevant versions of python, pip, nvm and node are included
 If downloads of e.g. electron related stuff fails then you might want to extract the contents of `cache.tar.gz` in your `~/.cache/` directory before following these instructions (make sure it doesn't land in `/.cache/cache/`).
 
 
-The following instructions were tested using Python 3.8.10, pip version 20.17.1 and python virtualenv version 20.17.1.
+The following instructions were tested using Python 3.8.10, pip version 22.3.1 and python virtualenv version 20.17.1.
 
 The `api/dist/opentrons-api-server` binary is included in this git repo. If you want to re-build it, first do:
 
