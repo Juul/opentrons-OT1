@@ -1,5 +1,7 @@
 This is a fork of the official OpenTrons git repo focused on making the last version of the OpenTrons app with support for the OT1 buildable and usable on modern systems.
 
+Note that the GUI app itself doesn't really do much. It mostly allows you to jog the robot around manually. The OT-1 is controlled using the python library. The last version of the python library to support the OT-1 is [here](https://pypi.org/project/opentrons/2.5.2/).
+
 If you just want the binary, which has been tested only on Xubuntu 20.04, then go to the Releases page and get `opentrons-ot1-app.tar.gz`, extract it and run `./ot-app`. You can also try the 
 
 Note that this is all based on the very last commit related to the 2.5.x OpenTrons app, which as far is the last software to support the OpenTrons OT-1.
